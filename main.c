@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "raymath.h"
+#include <stdio.h>
 
 // Struct definitions
 struct SnakeNode
@@ -108,7 +109,7 @@ int main(void)
 static void ResetGame(void)
 {
 	DeleteSnakeNode(snakeHead);
-	snakeHead = NewSnakeNode(0, GetRandomTilePos());
+	snakeHead = NewSnakeNode(NULL, GetRandomTilePos());
 	PlaceFruit();
 	inputBuffer = Vector2Zero();
 	snakeDirection = Vector2Zero();
@@ -175,7 +176,7 @@ static bool IsSnakeHeadPosOkay(void)
 
 static bool CheckSnakeNodesForPos(const Vector2 *pos, const struct SnakeNode *snakeNode)
 {
-	if (snakeNode == 0)
+	if (snakeNode == NULL)
 		return false;
 	if (Vector2Equals(*pos, snakeNode->pos))
 		return true;
@@ -198,7 +199,7 @@ static Vector2 GetInputDirection(void)
 
 static void DeleteSnakeNode(struct SnakeNode *snakeNode)
 {
-	if (snakeNode == 0)
+	if (snakeNode == NULL)
 		return;
 	DeleteSnakeNode(snakeNode->next);
 	MemFree(snakeNode);
@@ -207,8 +208,8 @@ static void DeleteSnakeNode(struct SnakeNode *snakeNode)
 static struct SnakeNode *NewSnakeNode(struct SnakeNode *next, Vector2 pos)
 {
 	struct SnakeNode *nodePointer = (struct SnakeNode *)MemAlloc(sizeof(struct SnakeNode));
-	if (nodePointer == 0)
-		return 0;
+	if (nodePointer == NULL)
+		return NULL;
 	nodePointer->next = next;
 	nodePointer->pos = pos;
 	return nodePointer;
@@ -216,9 +217,9 @@ static struct SnakeNode *NewSnakeNode(struct SnakeNode *next, Vector2 pos)
 
 static struct SnakeNode *MoveSnakeAndGetHead(Vector2 newPos, bool ateFruit)
 {
-	if (snakeHead == 0)
+	if (snakeHead == NULL)
 	{
-		return 0; // This should not happen. Why are you giving me a null ptr?
+		return NULL; // This should not happen. Why are you giving me a null ptr?
 	}
 
 	if (ateFruit)
@@ -228,10 +229,10 @@ static struct SnakeNode *MoveSnakeAndGetHead(Vector2 newPos, bool ateFruit)
 	}
 
 	struct SnakeNode *secondLastNode = GetSecondLastNode(snakeHead);
-	if (secondLastNode != 0)
+	if (secondLastNode != NULL)
 	{
 		struct SnakeNode *lastNode = secondLastNode->next;
-		secondLastNode->next = 0;
+		secondLastNode->next = NULL;
 		lastNode->next = snakeHead;
 		lastNode->pos = newPos;
 		return lastNode;
@@ -243,11 +244,11 @@ static struct SnakeNode *MoveSnakeAndGetHead(Vector2 newPos, bool ateFruit)
 
 static struct SnakeNode *GetSecondLastNode(struct SnakeNode *snakeNode)
 {
-	if (snakeNode->next == 0)
+	if (snakeNode->next == NULL)
 	{
-		return 0; // This happens when the snake is only 1 node
+		return NULL; // This happens when the snake is only 1 node
 	}
-	if (snakeNode->next->next == 0)
+	if (snakeNode->next->next == NULL)
 	{
 		return snakeNode;
 	}
